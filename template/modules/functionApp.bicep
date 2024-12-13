@@ -4,6 +4,9 @@ param storageAccountConnectionString string
 param appInsightsInstrumentationKey string
 param nodeVersion string = '~18'
 
+var queueInputName = 'emt-queue-input'
+var queueOutputName = 'emt-queue-output'
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: '${functionAppName}-plan'
   location: location
@@ -38,6 +41,14 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
       {
       name: 'WEBSITE_NODE_DEFAULT_VERSION'
       value: nodeVersion
+      }
+      {
+        name: 'QUEUE_INPUT_NAME'
+        value: queueInputName
+      }
+      {
+        name: 'QUEUE_OUTPUT_NAME'
+        value: queueOutputName
       }
       {
       name: 'QUEUE_STORAGE_CONNECTION'
