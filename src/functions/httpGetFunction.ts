@@ -10,6 +10,6 @@ export async function httpGetFunction(request: HttpRequest, context: InvocationC
 
 app.http('httpget', {
     methods: ['GET'],
-    authLevel: 'function',
+    authLevel: 'anonymous',
     handler: httpGetFunction
 });

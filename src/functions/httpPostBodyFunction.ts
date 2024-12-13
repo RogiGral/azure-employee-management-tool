@@ -38,6 +38,6 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
 
 app.http('httppost', {
     methods: ['POST'],
-    authLevel: 'function',
+    authLevel: 'anonymous',
     handler: httpPostBodyFunction
 });
