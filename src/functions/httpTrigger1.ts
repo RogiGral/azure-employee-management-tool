@@ -5,7 +5,10 @@ export async function httpTrigger1(request: HttpRequest, context: InvocationCont
 
     const name = request.query.get('name') || await request.text() || 'world';
 
-    return { body: `Hello, ${name}!` };
+    return {
+        status: 200,
+        body: `Environment variables: ${JSON.stringify(process.env)}`
+    };
 };
 
 app.http('httpTrigger1', {
