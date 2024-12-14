@@ -31,6 +31,10 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
     siteConfig: {
     appSettings: [
       {
+        name:'AzureWebJobsStorage'
+        value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
+      }
+      {
       name: 'FUNCTIONS_WORKER_RUNTIME'
       value: 'node'
       }
