@@ -1,4 +1,4 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
 
 interface Person {
     name: string;
@@ -11,13 +11,22 @@ function isPerson(obj: any): obj is Person {
            typeof obj.age === 'number';
 }
 
+const sendToQueue: StorageQueueOutput = output.storageQueue({
+    queueName: 'emt-queue-input',
+    connection: 'APPSETTING-QUEUE-STORAGE-CONNECTION',
+  });
+  
+
 export async function httpPostBodyFunction(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
         try {
             const data: any  = await request.json();
+
+            context.extraOutputs.set(sendToQueue, [data]);
     
             if (!isPerson(data)) {
+
                 return {
                     status: 400,
                     body: 'Please provide both name and age in the request body.'
@@ -39,5 +48,6 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
 app.http('httppost', {
     methods: ['POST'],
     authLevel: 'anonymous',
+    extraOutputs: [sendToQueue],
     handler: httpPostBodyFunction
 });
