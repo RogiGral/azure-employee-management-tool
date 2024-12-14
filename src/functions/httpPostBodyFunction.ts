@@ -53,14 +53,15 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
             };
         }
 
-        const message = JSON.stringify(data);
+        const message = JSON.stringify({...data, connectionString, queueName});
 
-        await sendToQueue(connectionString, queueName, message);
+        //await sendToQueue(connectionString, queueName, message);
 
         return {
             status: 200,
             body: JSON.stringify({
                 message: "Message sent to queue successfully." ,
+                data: message,
                 statusCode: 200
             })
         };
