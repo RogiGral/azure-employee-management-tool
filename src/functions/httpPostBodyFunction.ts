@@ -1,5 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
 import { QueueClient } from "@azure/storage-queue";
+import * as dotenv from "dotenv";
+dotenv.config();
 interface Person {
     name: string
     age: number
@@ -30,8 +32,8 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
                 body: 'Please provide both name and age in the request body.'
             }
         }
-        const connectionString = process.env.APPSETTING_QUEUE_STORAGE_CONNECTION;
-        const queueName = process.env.APPSETTING_QUEUE_NAME;
+        const connectionString = process.env.QUEUE_STORAGE_CONNECTION;
+        const queueName = process.env.QUEUE_INPUT_NAME;
 
         if (!connectionString || !queueName) {
             context.log("Queue connection string or queue name is not configured.");
