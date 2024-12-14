@@ -1,8 +1,5 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
 
-import * as dotenv from "dotenv";
-dotenv.config();
-
 interface QueueItem {
     name: string
     age: number
@@ -15,8 +12,8 @@ function isPerson(obj: any): obj is QueueItem {
 }
 
 const queueOutput = output.storageQueue({
-    queueName: process.env.OUTPUT_QUEUE_NAME,
-    connection: process.env.QUEUE_STORAGE_CONNECTION,
+    queueName: process.env['OUTPUT_QUEUE_NAME'],
+    connection: process.env['QUEUE_STORAGE_CONNECTION'],
 });
 
 export async function isPersonQueueTrigger(queueItem:  QueueItem, context: InvocationContext): Promise<HttpResponseInit> {
@@ -64,8 +61,8 @@ export async function isPersonQueueTrigger(queueItem:  QueueItem, context: Invoc
 }
 
 app.storageQueue('isPersonQueueTrigger', {
-    queueName: process.env.QUEUE_INPUT_NAME,
-    connection: process.env.QUEUE_STORAGE_CONNECTION,
+    queueName: process.env['QUEUE_INPUT_NAME'],
+    connection: process.env['QUEUE_STORAGE_CONNECTION'],
     extraOutputs: [queueOutput],
     handler: isPersonQueueTrigger
 })
