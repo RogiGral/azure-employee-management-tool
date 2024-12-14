@@ -1,4 +1,4 @@
-import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
+import { app, HttpResponseInit, InvocationContext, output } from "@azure/functions";
 
 interface QueueItem {
     name: string
@@ -12,8 +12,8 @@ function isPerson(obj: any): obj is QueueItem {
 }
 
 const queueOutput = output.storageQueue({
-    queueName: process.env['OUTPUT_QUEUE_NAME'],
-    connection: process.env['QUEUE_STORAGE_CONNECTION'],
+    queueName: process.env['OUTPUT_QUEUE_NAME'] || 'emt-queue-output',
+    connection: process.env['QUEUE_STORAGE_CONNECTION'] || 'AzureWebJobsStorage',
 });
 
 export async function isPersonQueueTrigger(queueItem:  QueueItem, context: InvocationContext): Promise<HttpResponseInit> {
@@ -61,8 +61,8 @@ export async function isPersonQueueTrigger(queueItem:  QueueItem, context: Invoc
 }
 
 app.storageQueue('isPersonQueueTrigger', {
-    queueName: process.env['QUEUE_INPUT_NAME'],
-    connection: process.env['QUEUE_STORAGE_CONNECTION'],
+    queueName: process.env['QUEUE_INPUT_NAME']  || 'emt-queue-input',
+    connection: process.env['QUEUE_STORAGE_CONNECTION'] || 'AzureWebJobsStorage',
     extraOutputs: [queueOutput],
     handler: isPersonQueueTrigger
 })
