@@ -11,15 +11,15 @@ function isPerson(obj: any): obj is Person {
            typeof obj.age === 'number';
 }
 
+const sendToQueue: StorageQueueOutput = output.storageQueue({
+    queueName: process.env.QUEUE_INPUT_NAME,
+    connection: process.env.QUEUE_STORAGE_CONNECTION,
+});
 
 
 export async function httpPostBodyFunction(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
-    const sendToQueue: StorageQueueOutput = output.storageQueue({
-        queueName: process.env.QUEUE_INPUT_NAME,
-        connection: process.env.QUEUE_STORAGE_CONNECTION,
-    });
 
     try {
         const data: any  = await request.json();
@@ -44,6 +44,7 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
 
 app.http('httppost', {
     methods: ['POST'],
+    extraOutputs: [sendToQueue],
     authLevel: 'anonymous',
     handler: httpPostBodyFunction
 });
