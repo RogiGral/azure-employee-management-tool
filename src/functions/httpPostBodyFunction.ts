@@ -1,6 +1,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
 import { QueueClient } from "@azure/storage-queue";
 import * as dotenv from "dotenv";
+import { stat } from "fs";
 dotenv.config();
 interface Person {
     name: string
@@ -15,6 +16,9 @@ function isPerson(obj: any): obj is Person {
 
 async function sendToQueue(connectionString: string, queueName: string, message: string): Promise<void> {
     const queueClient = new QueueClient(connectionString, queueName);
+    if (!queueClient) {
+        throw new Error("Failed to create queue client.");
+    }
     await queueClient.createIfNotExists()
     await queueClient.sendMessage(Buffer.from(message).toString("base64"))
 }
@@ -29,7 +33,10 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
             context.log("Invalid request body. Please provide a valid JSON object with name and age.");
             return {
                 status: 400,
-                body: 'Please provide both name and age in the request body.'
+                body: JSON.stringify({
+                    message: 'Please provide both name and age in the request body.',
+                    statusCode: 400
+                })
             }
         }
         const connectionString = process.env.QUEUE_STORAGE_CONNECTION;
@@ -39,7 +46,10 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
             context.log("Queue connection string or queue name is not configured.");
             return {
                 status: 500,
-                body: "Queue configuration is missing. Please check your environment variables."
+                body: JSON.stringify({
+                    message: "Queue configuration is missing. Please check your environment variables.",
+                    statusCode: 500
+                })
             };
         }
 
@@ -49,12 +59,18 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
 
         return {
             status: 200,
-            body: "Message sent to queue successfully."
+            body: JSON.stringify({
+                message: "Message sent to queue successfully." ,
+                statusCode: 200
+            })
         };
     } catch (error) {
         return {
             status: 400,
-            body: 'Invalid request body. Please provide a valid JSON object with name and age.'
+            body: JSON.stringify({
+                message: error.message,
+                statusCode: error.statusCode
+            })
         }
     }
 };
