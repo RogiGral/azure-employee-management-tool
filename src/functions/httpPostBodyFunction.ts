@@ -12,8 +12,8 @@ function isPerson(obj: any): obj is Person {
 }
 
 const sendToQueue: StorageQueueOutput = output.storageQueue({
-    queueName: 'emt-queue-input',
-    connection: 'APPSETTING-QUEUE-STORAGE-CONNECTION',
+    queueName: process.env.APPSETTING_QUEUE_INPUT_NAME || 'emt-queue-input',
+    connection: process.env.APPSETTING_QUEUE_STORAGE_CONNECTION ||'APPSETTING-QUEUE-STORAGE-CONNECTION',
   });
   
 
