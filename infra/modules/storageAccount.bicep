@@ -26,4 +26,3 @@ resource storageAccountQueues 'Microsoft.Storage/storageAccounts/queueServices/q
   name: queueName
 }]
 
-output storageAccountConnectionString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'

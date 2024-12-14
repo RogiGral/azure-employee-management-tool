@@ -1,11 +1,15 @@
 param location string
 param functionAppName string
-param storageAccountConnectionString string
+param storageAccountName string
 param appInsightsInstrumentationKey string
 param nodeVersion string = '~18'
 
 var queueInputName = 'emt-queue-input'
 var queueOutputName = 'emt-queue-output'
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' existing = {
+  name: storageAccountName
+}
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
   name: '${functionAppName}-plan'
@@ -28,7 +32,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
     appSettings: [
       {
       name: 'AzureWebJobsStorage'
-      value: storageAccountConnectionString
+      value: storageAccount.listKeys().keys[0].value
       }
       {
       name: 'FUNCTIONS_WORKER_RUNTIME'
@@ -52,7 +56,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
       }
       {
       name: 'QUEUE_STORAGE_CONNECTION'
-      value: storageAccountConnectionString
+      value: storageAccount.listKeys().keys[0].value
       }
     ]
     }
