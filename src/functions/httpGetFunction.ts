@@ -5,6 +5,8 @@ export async function httpGetFunction(request: HttpRequest, context: InvocationC
 
     const name = request.query.get('name') || await request.text() || 'world';
 
+    context.log(process.env['QUEUE_STORAGE_CONNECTION'] || 'AzureWebJobsStorage');
+
     return { body: `Hello, ${name}!` };
 };
 
