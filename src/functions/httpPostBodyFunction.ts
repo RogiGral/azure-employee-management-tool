@@ -1,5 +1,4 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext, output, StorageQueueOutput } from "@azure/functions";
-
 interface Person {
     name: string;
     age: number;
@@ -11,19 +10,14 @@ function isPerson(obj: any): obj is Person {
            typeof obj.age === 'number';
 }
 
-const sendToQueue: StorageQueueOutput = output.storageQueue({
-    queueName: process.env.QUEUE_INPUT_NAME,
-    connection: process.env.QUEUE_STORAGE_CONNECTION,
-});
-
-
 export async function httpPostBodyFunction(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
 
     try {
         const data: any  = await request.json();
-        context.extraOutputs.set(sendToQueue, [data]);
+
+
         if (!isPerson(data)) {
             return {
                 status: 400,
@@ -32,7 +26,8 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
         }
         return {
             status: 200,
-            body: `Hello, ${data.name}! You are ${data.age} years old.`
+            body: JSON.stringify(process.env, null, 2)
+            
         };
     } catch (error) {
         return {
@@ -44,7 +39,6 @@ export async function httpPostBodyFunction(request: HttpRequest, context: Invoca
 
 app.http('httppost', {
     methods: ['POST'],
-    extraOutputs: [sendToQueue],
     authLevel: 'anonymous',
     handler: httpPostBodyFunction
 });
