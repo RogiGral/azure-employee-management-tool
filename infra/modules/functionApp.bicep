@@ -55,7 +55,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         value: queueOutputName
       }
       {
-      name: 'QUEUE_STORAGE_CONNECTION'
+      name: 'STORAGE_ACCOUNT_CONNECTION'
       value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
       }
     ]

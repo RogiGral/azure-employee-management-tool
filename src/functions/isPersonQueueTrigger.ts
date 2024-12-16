@@ -2,7 +2,7 @@ import { app, InvocationContext, output } from "@azure/functions";
 
 const outputQueue = output.storageQueue({
     queueName: 'emt-queue-output',
-    connection: 'QUEUE_STORAGE_CONNECTION',
+    connection: 'STORAGE_ACCOUNT_CONNECTION',
 });
 
 export async function isPersonQueueTrigger(queueItem: unknown, context: InvocationContext): Promise<void> {
@@ -12,7 +12,7 @@ export async function isPersonQueueTrigger(queueItem: unknown, context: Invocati
 
 app.storageQueue('isPersonQueueTrigger', {
     queueName: 'emt-queue-input',
-    connection: 'QUEUE_STORAGE_CONNECTION',
+    connection: 'STORAGE_ACCOUNT_CONNECTION',
     extraOutputs: [outputQueue],
     handler: isPersonQueueTrigger
 });
