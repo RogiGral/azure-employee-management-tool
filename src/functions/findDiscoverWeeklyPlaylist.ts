@@ -19,12 +19,12 @@ export async function findDiscoverWeeklyPlaylist(queueItem: QueueItem, context: 
         (playlist) => playlist.name === 'Discover Weekly'
     )
 
-    context.log(playlistSearchResultObject);
+    context.debug(playlistSearchResultObject);
 
     const trackList = await spotifyAuthService.getPlaylistTracks(playlistSearchResultObject.id);
     const trackUriList = trackList.body.items.map((item) => item.track.uri);
 
-    context.log(trackUriList);
+    context.debug(trackUriList);
 
     const userId = (await spotifyAuthService.getMe()).body.id;
     const userPlaylists = await spotifyAuthService.getUserPlaylists(userId);
@@ -32,7 +32,8 @@ export async function findDiscoverWeeklyPlaylist(queueItem: QueueItem, context: 
         (playlist) => playlist.name === 'Archive of Discover Weekly Spotify'
     );
 
-    context.log(archivePlaylist);
+    context.debug(archivePlaylist);
+    context.debug('archuve name',archivePlaylist.name);
 
 }
 
