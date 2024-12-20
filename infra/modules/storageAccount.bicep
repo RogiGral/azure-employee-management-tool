@@ -1,7 +1,7 @@
 param location string
 param storageAccountName string
 
-var queues = ['emt-queue-input', 'emt-queue-output']
+var queues = ['spotify-token-queue']
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
