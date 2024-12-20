@@ -5,7 +5,15 @@ param appInsightsInstrumentationKey string
 param cosmosDbAccountName string
 param cosmosDbDatabaseName string
 param cosmosDbContainerName string
+param mailUsername string
+@secure()
+param mailPassword string
 param nodeVersion string = '~18'
+
+param spotifyClientId string
+@secure()
+param spotifyClientSecret string
+param spotifyRedirectUri string
 
 var queueInputName = 'emt-queue-input'
 var queueOutputName = 'emt-queue-output'
@@ -76,6 +84,26 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         {
           name: 'STORAGE_ACCOUNT_CONNECTION'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccountName};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=core.windows.net'
+        }
+        {
+          name:'MAIL_USERNAME'
+          value: mailUsername
+        }
+        {
+          name:'MAIL_PASSWORD'
+          value: mailPassword
+        }
+        {
+          name:'SPOTIFY_CLIENT_ID'
+          value: spotifyClientId
+        }
+        {
+          name:'SPOTIFY_CLIENT_SECRET'
+          value: spotifyClientSecret
+        }
+        {
+          name:'SPOTIFY_REDIRECT_URI'
+          value: spotifyRedirectUri
         }
       ]
     }

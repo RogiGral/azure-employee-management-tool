@@ -1,5 +1,4 @@
-import { CosmosClient } from "@azure/cosmos";
-import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit, InvocationContext,output } from "@azure/functions";
 import * as dotenv from "dotenv";
 import { cosmosDbService } from "../services/cosmosDb.service";
 dotenv.config();
@@ -10,6 +9,11 @@ interface Employee {
     designation: string;
     salary: number;
 }
+
+const inputQueue = output.storageQueue({
+    queueName: 'emt-queue-input',
+    connection: 'STORAGE_ACCOUNT_CONNECTION',
+});
 
 function isEmployee(obj: any): obj is Employee {
     return typeof obj === 'object' && obj !== null &&
@@ -24,7 +28,7 @@ export async function createEmployee(request: HttpRequest, context: InvocationCo
     try {
         
         const employee = await new Response(request.body).json();
-        context.log(request.body);
+        
         if (!isEmployee(employee)) {
             context.log("Invalid request body. Please provide a valid JSON object with name, department, designation, and salary.");
             return {
@@ -35,6 +39,8 @@ export async function createEmployee(request: HttpRequest, context: InvocationCo
                 })
             };
         }
+
+        context.extraOutputs.set(inputQueue, { status: 200, body: JSON.stringify(employee) });
         
         const { resource: createdEmployee } = await cosmosDbService.container.items.create(employee);
 

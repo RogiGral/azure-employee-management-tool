@@ -6,7 +6,8 @@ const outputQueue = output.storageQueue({
 });
 
 export async function isPersonQueueTrigger(queueItem: unknown, context: InvocationContext): Promise<void> {
-    context.log('Storage queue function processed work item:', queueItem);
+
+    
     context.extraOutputs.set(outputQueue, { status: 200, body: JSON.stringify(queueItem) });
 }
 

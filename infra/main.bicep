@@ -1,13 +1,24 @@
 param location string = resourceGroup().location
-param storageAccountName string = 'rogietmstorageaccount'
-param functionAppName string = 'rogietmfunctionapp'
-param appInsightsName string = 'rogietmappinsights'
-param logAnalyticsName string = 'rogietmloganalytics'
+param storageAccountName string 
+param functionAppName string 
+param appInsightsName string 
+param logAnalyticsName string 
 
-param cosmosDbAccountName string = 'rogietmcosmosdb'
-param cosmosDbDatabaseName string = 'EmployeeDatabase'
-param cosmosDbContainerName string = 'EmployeeContainer'
-param cosmosDbPartitionKey string = '/partitionKey'
+param cosmosDbAccountName string 
+param cosmosDbDatabaseName string 
+param cosmosDbContainerName string 
+param cosmosDbPartitionKey string
+
+
+param spotifyClientId string
+@secure()
+param spotifyClientSecret string
+param spotifyRedirectUri string
+
+@secure()
+param mailUsername string
+@secure()
+param mailPassword string
 module storageAccount './modules/storageAccount.bicep' = {
   name: storageAccountName
   params: {
@@ -43,6 +54,11 @@ module functionApp './modules/functionApp.bicep' = {
     cosmosDbAccountName: cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDbDatabaseName
     cosmosDbContainerName: cosmosDbContainerName
+    mailPassword: mailPassword
+    mailUsername: mailUsername
+    spotifyClientId: spotifyClientId
+    spotifyClientSecret: spotifyClientSecret
+    spotifyRedirectUri: spotifyRedirectUri
   }
 }
 
