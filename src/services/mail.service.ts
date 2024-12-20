@@ -13,11 +13,11 @@ class MailService {
       }
     });
   }
-  async sendMail(to: string, subject: string, text: string): Promise<void> {
+  async sendMail(to: string, subject: string, html: string): Promise<void> {
     const mailOptions = {
       to,
       subject,
-      text
+      html
     };
     await this.transporter.sendMail(mailOptions);
   }

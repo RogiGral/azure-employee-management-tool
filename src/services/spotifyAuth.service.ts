@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 
-class SpotifyAuthService {
+class SpotifyAuthService  {
 
   private spotifyApi: SpotifyWebApi;
 
@@ -28,7 +28,18 @@ class SpotifyAuthService {
   setAccessToken(access_token: any) {
     this.spotifyApi.setAccessToken(access_token);
   }
-  
+  searchPlaylists(query: string) {
+    return this.spotifyApi.searchPlaylists(query);
+  }
+  getPlaylistTracks(playlistId: string) {
+    return this.spotifyApi.getPlaylistTracks(playlistId);
+  }
+  getMe() {
+    return this.spotifyApi.getMe();
+  }
+  getUserPlaylists(userId: string) {
+    return this.spotifyApi.getUserPlaylists(userId);
+  }
 }
 
 const spotifyAuthService = new SpotifyAuthService();

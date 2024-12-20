@@ -1,5 +1,4 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import axios from "axios";
 import { spotifyAuthService } from "../services/spotifyAuth.service";
 import { mailService } from "../services/mail.service";
 
@@ -8,13 +7,11 @@ export async function sendMail(request: HttpRequest, context: InvocationContext)
   try {
 
     const authUrl = await spotifyAuthService.getAuthUrl();
-
-    //const redirectResponse = await axios.get(authUrl);
     
     await mailService.sendMail(
       process.env.MAIL_USERNAME, 
       'Spotify Discover Weekly Archive', 
-      `<p>This is a test email from Azure Function</p>
+      `<p>Welcome to your Spotify Archive Creator</p>
       <p>Here is your redirect response:</p>
       <pre>${JSON.stringify(authUrl)}</pre>`
     );
